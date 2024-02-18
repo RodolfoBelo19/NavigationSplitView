@@ -1,16 +1,11 @@
-//
-//  ContentView.swift
-//  todo
-//
-//  Created by Rodolfo Belo on 17/02/24.
-//
-
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    
+//    @State private var newTitle = ""
 
     var body: some View {
         NavigationSplitView {
@@ -19,7 +14,13 @@ struct ContentView: View {
                     NavigationLink {
                         Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        Text(" at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+
+                    }
+                    Button(action: {
+                        deleteItems(offsets: IndexSet([items.firstIndex(of: item)!]))
+                    }) {
+                        Text("Delete")
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -41,6 +42,13 @@ struct ContentView: View {
             }
         } detail: {
             Text("Select an item")
+//            VStack {
+//                            TextField("Title", text: $newTitle)
+//                                .textFieldStyle(RoundedBorderTextFieldStyle())
+//                                .padding()
+//                            
+//                            
+//            }
         }
     }
 
@@ -48,6 +56,7 @@ struct ContentView: View {
         withAnimation {
             let newItem = Item(timestamp: Date())
             modelContext.insert(newItem)
+//            newTitle = ""
         }
     }
 
